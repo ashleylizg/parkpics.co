@@ -5,7 +5,10 @@ Web app that curates national park pictures.
 ## Quickstart
 
 ```
-cd parkpics.co
+# This is all for Powershell, figure it out otherwise
+
+git clone <this_repo>
+cd <this_repo>
 
 # Make sure virtualenv is installed then do this
 virtualenv env
@@ -17,8 +20,8 @@ virtualenv env
 pip install -r requirements.txt
 
 # Do one of the following
-export APP_SETTINGS="project.server.config.DevelopmentConfig"
-export APP_SETTINGS="project.server.config.ProductionConfig"
+set-variable -name "APP_SETTINGS" -value "project.server.config.DevelopmentConfig"
+set-variable -name "APP_SETTINGS" -value "project.server.config.ProductionConfig"
 
 python manage.py create_db
 python manage.py db init
@@ -27,8 +30,8 @@ python manage.py create_admin
 python manage.py create_data
 
 # Do one of the following
-export FLASK_DEBUG=1 && python manage.py run
-export FLASK_DEBUG=0 && python manage.py run
+set-variable -name "FLASK_DEBUG" -value True; python manage.py run
+set-variable -name "FLASK_DEBUG" -value False; python manage.py run
 ```
 
 Access the application at [http://localhost:5000](http://localhost:5000).
