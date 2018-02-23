@@ -60,3 +60,9 @@ def logout():
 @login_required
 def members():
     return render_template('user/members.html')
+
+
+@user_blueprint.route('/upload')
+@login_required
+def upload():
+    return render_template('user/upload.html')

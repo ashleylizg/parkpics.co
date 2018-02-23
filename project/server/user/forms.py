@@ -22,7 +22,7 @@ class RegisterForm(FlaskForm):
     )
     password = PasswordField(
         'Password',
-        validators=[DataRequired(), Length(min=6, max=25)]
+        validators=[DataRequired(), Length(min=8, max=128)]
     )
     confirm = PasswordField(
         'Confirm password',
