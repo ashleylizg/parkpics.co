@@ -3,7 +3,7 @@
 
 from flask import render_template, Blueprint, url_for, \
     redirect, flash, request
-from flask_login import login_user, logout_user, login_required
+from flask_login import current_user, login_user, logout_user, login_required
 
 from project.server import bcrypt, db
 from project.server.models import User
@@ -29,7 +29,7 @@ def register():
         flash('Thank you for registering.', 'success')
         return redirect(url_for("user.members"))
 
-    return render_template('user/register.html', form=form)
+    return render_template('user/register.html', form=form, is_authenticated=current_user.is_authenticated)
 
 
 @user_blueprint.route('/login', methods=['GET', 'POST'])
@@ -44,8 +44,8 @@ def login():
             return redirect(url_for('user.members'))
         else:
             flash('Invalid email and/or password.', 'danger')
-            return render_template('user/login.html', form=form)
-    return render_template('user/login.html', title='Please Login', form=form)
+            return render_template('user/login.html', form=form, is_authenticated=current_user.is_authenticated)
+    return render_template('user/login.html', title='Please Login', form=form, is_authenticated=current_user.is_authenticated)
 
 
 @user_blueprint.route('/logout')
@@ -59,10 +59,16 @@ def logout():
 @user_blueprint.route('/members')
 @login_required
 def members():
-    return render_template('user/members.html')
+    return render_template('user/members.html', is_authenticated=current_user.is_authenticated)
 
 
 @user_blueprint.route('/upload')
 @login_required
 def upload():
-    return render_template('user/upload.html')
+    return render_template('user/upload.html', is_authenticated=current_user.is_authenticated)
+
+
+@user_blueprint.route('/mypics')
+@login_required
+def my_pictures():
+    return render_template('user/mypics.html', is_authenticated=current_user.is_authenticated)
