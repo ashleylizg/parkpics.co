@@ -1,13 +1,21 @@
 # project/server/user/views.py
 
 
+import os
+
+from flask import current_app as app
 from flask import render_template, Blueprint, url_for, \
-    redirect, flash, request
+    redirect, flash, request, send_from_directory
 from flask_login import current_user, login_user, logout_user, login_required
 
 from project.server import bcrypt, db
 from project.server.models import User
 from project.server.user.forms import LoginForm, RegisterForm
+
+from werkzeug.utils import secure_filename
+
+
+ALLOWED_UPLOAD_EXTENSIONS = set(['jpg','jpeg','png','gif'])
 
 
 user_blueprint = Blueprint('user', __name__,)
@@ -62,10 +70,37 @@ def members():
     return render_template('user/members.html', is_authenticated=current_user.is_authenticated)
 
 
-@user_blueprint.route('/upload')
+def is_allowed_file(filename):
+    return '.' in filename and \
+            filename.rsplit('.', 1)[1].lower() in ALLOWED_UPLOAD_EXTENSIONS
+
+
+@user_blueprint.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload():
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part.', 'error')
+            return redirect(request.url)
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit a empty part without filename
+        if file.filename == '':
+            flash('No selected file.', 'error')
+            return redirect(request.url)
+        if file and is_allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            flash('Upload successful.', 'success')
+            return redirect(url_for('user.my_pictures'))
+    # here it's a GET and we render the template
     return render_template('user/upload.html', is_authenticated=current_user.is_authenticated)
+
+
+@user_blueprint.route('/img/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 
 @user_blueprint.route('/mypics')
