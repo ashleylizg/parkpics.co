@@ -2,6 +2,7 @@
 
 
 import datetime
+import uuid
 
 from flask import current_app
 
@@ -40,3 +41,34 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User {0}>'.format(self.email)
+
+
+class Picture(db.Model):
+
+    __tablename__ = 'pictures'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    upload_date = db.Column(db.DateTime, nullable=False)
+    owner_id = db.Column(db.Integer, nullable=True)
+    filename = db.Column(db.String(255), unique=True, nullable=False)
+    filesize = db.Column(db.String(255), nullable=True)
+    original_filename = db.Column(db.String(255), nullable=True)
+    original_filesize = db.Column(db.String(255), nullable=True)
+    geolocation = db.Column(db.String(255), nullable=True)
+    park_name = db.Column(db.String(255), nullable=True)
+    tags = db.Column(db.String(255), nullable=True)
+
+    def __init__(self, owner_id=None, file_extension='.jpg', filesize=None, original_filename=None, \
+                    original_filesize=None, geolocation=None, park_name=None, tags=None):
+        self.upload_date = datetime.datetime.now()
+        self.owner_id = owner_id
+        self.filename = str(uuid.uuid4()) + file_extension
+        self.filesize = filesize
+        self.original_filename = original_filename
+        self.original_filesize = original_filesize
+        self.geolocation = geolocation
+        self.park_name = park_name
+        self.tags = tags
+
+    def __repr__(self):
+        return '<Picture {0}>'.format(self.filename)
