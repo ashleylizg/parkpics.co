@@ -2,7 +2,6 @@
 
 
 import datetime
-import uuid
 
 from flask import current_app
 
@@ -58,11 +57,11 @@ class Picture(db.Model):
     park_name = db.Column(db.String(255), nullable=True)
     tags = db.Column(db.String(255), nullable=True)
 
-    def __init__(self, owner_id=None, file_extension='.jpg', filesize=None, original_filename=None, \
+    def __init__(self, filename, owner_id=None, filesize=None, original_filename=None, \
                     original_filesize=None, geolocation=None, park_name=None, tags=None):
         self.upload_date = datetime.datetime.now()
         self.owner_id = owner_id
-        self.filename = str(uuid.uuid4()) + file_extension
+        self.filename = filename
         self.filesize = filesize
         self.original_filename = original_filename
         self.original_filesize = original_filesize

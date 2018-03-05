@@ -2,6 +2,7 @@
 
 
 import os
+import uuid
 
 from flask import current_app as app
 from flask import render_template, Blueprint, url_for, \
@@ -9,7 +10,7 @@ from flask import render_template, Blueprint, url_for, \
 from flask_login import current_user, login_user, logout_user, login_required
 
 from project.server import bcrypt, db
-from project.server.models import User
+from project.server.models import Picture, User
 from project.server.user.forms import LoginForm, RegisterForm
 
 from werkzeug.utils import secure_filename
@@ -35,7 +36,7 @@ def register():
         login_user(user)
 
         flash('Thank you for registering.', 'success')
-        return redirect(url_for("user.members"))
+        return redirect(url_for('user.members'))
 
     return render_template('user/register.html', form=form, is_authenticated=current_user.is_authenticated)
 
@@ -90,8 +91,20 @@ def upload():
             flash('No selected file.', 'error')
             return redirect(request.url)
         if file and is_allowed_file(file.filename):
-            filename = secure_filename(file.filename)
+            original_filename = secure_filename(file.filename)
+            file_extension = original_filename.split('.')[-1]
+            filename = str(uuid.uuid4()) + '.' + file_extension
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            filesize = os.path.getsize(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            picture = Picture(
+                owner_id=str(current_user),
+                filename=filename,
+                filesize=filesize,  # in the future we may scale down files, thus the 2 fields
+                original_filename=original_filename,
+                original_filesize=filesize
+            )
+            db.session.add(picture)
+            db.session.commit()
             flash('Upload successful.', 'success')
             return redirect(url_for('user.my_pictures'))
     # here it's a GET and we render the template
