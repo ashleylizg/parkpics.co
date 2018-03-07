@@ -36,7 +36,7 @@ def register():
         login_user(user)
 
         flash('Thank you for registering.', 'success')
-        return redirect(url_for('user.members'))
+        return redirect(url_for('user.my_pictures'))
 
     return render_template('user/register.html', form=form, is_authenticated=current_user.is_authenticated)
 
@@ -50,7 +50,7 @@ def login():
                 user.password, request.form['password']):
             login_user(user)
             flash('You are logged in. Welcome!', 'success')
-            return redirect(url_for('user.members'))
+            return redirect(url_for('user.my_pictures'))
         else:
             flash('Invalid email and/or password.', 'danger')
             return render_template('user/login.html', form=form, is_authenticated=current_user.is_authenticated)
@@ -63,12 +63,6 @@ def logout():
     logout_user()
     flash('You were logged out. Bye!', 'success')
     return redirect(url_for('main.home'))
-
-
-@user_blueprint.route('/members')
-@login_required
-def members():
-    return render_template('user/members.html', is_authenticated=current_user.is_authenticated)
 
 
 def is_allowed_file(filename):
@@ -97,7 +91,7 @@ def upload():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             filesize = os.path.getsize(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             picture = Picture(
-                owner_id=str(current_user),
+                owner_id=current_user.get_id(),
                 filename=filename,
                 filesize=filesize,  # in the future we may scale down files, thus the 2 fields
                 original_filename=original_filename,
@@ -119,4 +113,5 @@ def uploaded_file(filename):
 @user_blueprint.route('/mypics')
 @login_required
 def my_pictures():
-    return render_template('user/mypics.html', is_authenticated=current_user.is_authenticated)
+    pictures = current_user.get_my_pictures()
+    return render_template('user/mypics.html', pictures=pictures, is_authenticated=current_user.is_authenticated)

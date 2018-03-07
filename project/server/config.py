@@ -13,6 +13,7 @@ class BaseConfig(object):
     DEBUG_TB_INTERCEPT_REDIRECTS = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     UPLOAD_FOLDER = basedir + os.sep + ".." + os.sep + ".." + os.sep + "uploads"
+    BASE_URL = 'http://localhost:5000'
 
 
 class DevelopmentConfig(BaseConfig):

@@ -3,7 +3,7 @@
 
 import datetime
 
-from flask import current_app
+from flask import current_app as app
 
 from project.server import db, bcrypt
 
@@ -21,7 +21,7 @@ class User(db.Model):
     def __init__(self, email, password, admin=False):
         self.email = email
         self.password = bcrypt.generate_password_hash(
-            password, current_app.config.get('BCRYPT_LOG_ROUNDS')
+            password, app.config.get('BCRYPT_LOG_ROUNDS')
         ).decode('utf-8')
         self.registered_on = datetime.datetime.now()
         self.admin = admin
@@ -37,6 +37,10 @@ class User(db.Model):
 
     def get_id(self):
         return self.id
+
+    def get_my_pictures(self):
+        my_pictures = Picture.query.filter_by(owner_id=self.id).order_by(Picture.upload_date.desc()).all()
+        return my_pictures
 
     def __repr__(self):
         return '<User {0}>'.format(self.email)
@@ -68,6 +72,17 @@ class Picture(db.Model):
         self.geolocation = geolocation
         self.park_name = park_name
         self.tags = tags
+
+    def get_caption(self):
+        if self.original_filename is not None:
+            return self.original_filename
+        elif self.upload_date is not None:
+            return str(self.upload_date)
+        else:
+            return 'Picture'
+
+    def get_web_url(self):
+        return app.config.get('BASE_URL') + '/img/' + self.filename
 
     def __repr__(self):
         return '<Picture {0}>'.format(self.filename)

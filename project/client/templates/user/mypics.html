@@ -2,107 +2,17 @@
 {% block content %}
   <h1><em>{{ current_user.email }}</em>'s pics</h1>
   <div class="row" id="my-pics-area">
+  {% for picture in pictures %}
     <div class="col-md-2">
       <div class="thumbnail">
-        <a href="http://lorempixel.com/output/nature-q-g-791-480-7.jpg">
-          <img src="http://lorempixel.com/output/nature-q-g-791-480-7.jpg" style="width:120px;height:120px">
+        <a href="{{ picture.get_web_url() }}">
+          <img src="{{ picture.get_web_url() }}" style="width:120px;height:120px">
           <div class="caption">
-            <p>Lorem ipsum...</p>
+            <p>{{ picture.get_caption() }}</p>
           </div>
         </a>
       </div>
     </div>
-    <div class="col-md-2">
-      <div class="thumbnail">
-        <a href="http://lorempixel.com/output/nature-q-g-791-480-7.jpg">
-          <img src="http://lorempixel.com/output/nature-q-g-791-480-7.jpg" style="width:120px;height:120px">
-          <div class="caption">
-            <p>Lorem ipsum...</p>
-          </div>
-        </a>
-      </div>
-    </div>
-    <div class="col-md-2">
-      <div class="thumbnail">
-        <a href="http://lorempixel.com/output/nature-q-g-791-480-7.jpg">
-          <img src="http://lorempixel.com/output/nature-q-g-791-480-7.jpg" style="width:120px;height:120px">
-          <div class="caption">
-            <p>Lorem ipsum...</p>
-          </div>
-        </a>
-      </div>
-    </div>
-    <div class="col-md-2">
-      <div class="thumbnail">
-        <a href="http://lorempixel.com/output/nature-q-g-791-480-7.jpg">
-          <img src="http://lorempixel.com/output/nature-q-g-791-480-7.jpg" style="width:120px;height:120px">
-          <div class="caption">
-            <p>Lorem ipsum...</p>
-          </div>
-        </a>
-      </div>
-    </div>
-    <div class="col-md-2">
-      <div class="thumbnail">
-        <a href="http://lorempixel.com/output/nature-q-g-791-480-7.jpg">
-          <img src="http://lorempixel.com/output/nature-q-g-791-480-7.jpg" style="width:120px;height:120px">
-          <div class="caption">
-            <p>Lorem ipsum...</p>
-          </div>
-        </a>
-      </div>
-    </div>
-  </div>
-  <div class="row" id="my-pics-area">
-    <div class="col-md-2">
-      <div class="thumbnail">
-        <a href="http://lorempixel.com/output/nature-q-g-791-480-7.jpg">
-          <img src="http://lorempixel.com/output/nature-q-g-791-480-7.jpg" style="width:120px;height:120px">
-          <div class="caption">
-            <p>Lorem ipsum...</p>
-          </div>
-        </a>
-      </div>
-    </div>
-    <div class="col-md-2">
-      <div class="thumbnail">
-        <a href="http://lorempixel.com/output/nature-q-g-791-480-7.jpg">
-          <img src="http://lorempixel.com/output/nature-q-g-791-480-7.jpg" style="width:120px;height:120px">
-          <div class="caption">
-            <p>Lorem ipsum...</p>
-          </div>
-        </a>
-      </div>
-    </div>
-    <div class="col-md-2">
-      <div class="thumbnail">
-        <a href="http://lorempixel.com/output/nature-q-g-791-480-7.jpg">
-          <img src="http://lorempixel.com/output/nature-q-g-791-480-7.jpg" style="width:120px;height:120px">
-          <div class="caption">
-            <p>Lorem ipsum...</p>
-          </div>
-        </a>
-      </div>
-    </div>
-    <div class="col-md-2">
-      <div class="thumbnail">
-        <a href="http://lorempixel.com/output/nature-q-g-791-480-7.jpg">
-          <img src="http://lorempixel.com/output/nature-q-g-791-480-7.jpg" style="width:120px;height:120px">
-          <div class="caption">
-            <p>Lorem ipsum...</p>
-          </div>
-        </a>
-      </div>
-    </div>
-    <div class="col-md-2">
-      <div class="thumbnail">
-        <a href="http://lorempixel.com/output/nature-q-g-791-480-7.jpg">
-          <img src="http://lorempixel.com/output/nature-q-g-791-480-7.jpg" style="width:120px;height:120px">
-          <div class="caption">
-            <p>Lorem ipsum...</p>
-          </div>
-        </a>
-      </div>
-    </div>
+  {% endfor %}
   </div>
 {% endblock %}
