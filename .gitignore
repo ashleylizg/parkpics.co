@@ -10,3 +10,7 @@ __pycache__
 env.sh
 migrations
 htmlcov
+
+.vscode
+
+uploads/*
