@@ -48,6 +48,7 @@ def create_app(script_info=None):
     from project.server.main.views import main_blueprint
     app.register_blueprint(user_blueprint)
     app.register_blueprint(main_blueprint)
+    app.register_blueprint(imagery_blueprint)
 
     # flask login
     from project.server.models import User
