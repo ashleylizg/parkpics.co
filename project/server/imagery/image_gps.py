@@ -1,4 +1,3 @@
-from PIL import Image
 from PIL.ExifTags import TAGS, GPSTAGS
 
 def _get_if_exist(data, key):
@@ -34,7 +33,7 @@ def get_lat_lon(image):
                 exif_data[decoded] = value
     else:
         # No EXIF or location data
-        return None, None
+        return None
     lat = None
     lon = None
     if 'GPSInfo' in exif_data:		
@@ -50,12 +49,6 @@ def get_lat_lon(image):
             lon = _convert_to_degress(gps_longitude)
             if gps_longitude_ref != 'E':
                 lon = 0 - lon
-    return lat, lon
-
-if __name__ == '__main__':
-    image = Image.open('sample_image.jpg')
-    lat, lon = get_lat_lon(image)
     if lat is None or lon is None:
-        print('No location data')
-    else:
-        print(lat, lon)
+        return None
+    return str(lat) + ' ' +  str(lon)
