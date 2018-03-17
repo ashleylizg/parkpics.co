@@ -44,6 +44,7 @@ def create_app(script_info=None):
     migrate.init_app(app, db)
 
     # register blueprints
+    from project.server.imagery.views import imagery_blueprint
     from project.server.user.views import user_blueprint
     from project.server.main.views import main_blueprint
     app.register_blueprint(user_blueprint)

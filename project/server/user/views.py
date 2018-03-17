@@ -32,7 +32,7 @@ def register():
         login_user(user)
 
         flash('Thank you for registering.', 'success')
-        return redirect(url_for('user.my_pictures'))
+        return redirect(url_for('imagery.my_pictures'))
 
     return render_template('user/register.html', form=form, is_authenticated=current_user.is_authenticated)
 
@@ -46,7 +46,7 @@ def login():
                 user.password, request.form['password']):
             login_user(user)
             flash('You are logged in. Welcome!', 'success')
-            return redirect(url_for('user.my_pictures'))
+            return redirect(url_for('imagery.my_pictures'))
         else:
             flash('Invalid email and/or password.', 'danger')
             return render_template('user/login.html', form=form, is_authenticated=current_user.is_authenticated)
