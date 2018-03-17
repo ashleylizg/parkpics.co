@@ -1,22 +1,6 @@
 from PIL import Image
 from PIL.ExifTags import TAGS, GPSTAGS
 
-def get_exif_data(image):
-    exif_data = {}
-    info = image._getexif()
-    if info:
-        for tag, value in info.items():
-            decoded = TAGS.get(tag, tag)
-            if decoded == 'GPSInfo':
-                gps_data = {}
-                for t in value:
-                    sub_decoded = GPSTAGS.get(t, t)
-                    gps_data[sub_decoded] = value[t]
-                exif_data[decoded] = gps_data
-            else:
-                exif_data[decoded] = value
-    return exif_data
-
 def _get_if_exist(data, key):
     if key in data:
         return data[key]
@@ -34,7 +18,23 @@ def _convert_to_degress(value):
     s = float(s0) / float(s1)
     return d + (m / 60.0) + (s / 3600.0)
 
-def get_lat_lon(exif_data):
+def get_lat_lon(image):
+    exif_data = {}
+    info = image._getexif()
+    if info:
+        for tag, value in info.items():
+            decoded = TAGS.get(tag, tag)
+            if decoded == 'GPSInfo':
+                gps_data = {}
+                for t in value:
+                    sub_decoded = GPSTAGS.get(t, t)
+                    gps_data[sub_decoded] = value[t]
+                exif_data[decoded] = gps_data
+            else:
+                exif_data[decoded] = value
+    else:
+        # No EXIF or location data
+        return None, None
     lat = None
     lon = None
     if 'GPSInfo' in exif_data:		
@@ -54,5 +54,8 @@ def get_lat_lon(exif_data):
 
 if __name__ == '__main__':
     image = Image.open('sample_image.jpg')
-    exif_data = get_exif_data(image)
-    print(get_lat_lon(exif_data))
+    lat, lon = get_lat_lon(image)
+    if lat is None or lon is None:
+        print('No location data')
+    else:
+        print(lat, lon)
