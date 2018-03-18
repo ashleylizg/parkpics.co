@@ -55,8 +55,8 @@ def create_data():
         if file.endswith('.csv'):
             csv_filenames.append(os.path.join('data', file))
     for csv_filename in csv_filenames:
-        with open(csv_filename, newline='', fieldnames=field_names) as csvfile:
-            reader = csv.DictReader(csvfile)
+        with open(csv_filename, newline='') as csvfile:
+            reader = csv.DictReader(csvfile, fieldnames=field_names)
             for row in reader:
                 p = Park(latitude=row['latitude'],
                          longitude=row['longitude'],
