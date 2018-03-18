@@ -99,7 +99,7 @@ class Park(db.Model):
     name = db.Column(db.String(128), nullable=True)
     state = db.Column(db.String(128), nullable=True)
 
-    def __init__(self, latitude=None, longitude=None, info_string=None, \
+    def __init__(self, latitude=0.0, longitude=0.0, info_string=None, \
                     name_abbr=None, name=None, state=None):
         self.latitude = latitude
         self.longitude = longitude
@@ -107,6 +107,15 @@ class Park(db.Model):
         self.name_abbr = name_abbr
         self.name = name
         self.state = state
+
+        def get_id():
+            return self.id
+
+        def get_lat_float():
+            return float(self.latitude)
+
+        def get_lon_float():
+            return float(self.longitude)
 
         def __repr__(self):
             return '<Park {0}>'.format(self.id)
