@@ -19,9 +19,15 @@ ALLOWED_UPLOAD_EXTENSIONS = set(['jpg','jpeg','png','gif'])
 
 imagery_blueprint = Blueprint('imagery', __name__,)
 
+
 def is_allowed_file(filename):
     return '.' in filename and \
             filename.rsplit('.', 1)[1].lower() in ALLOWED_UPLOAD_EXTENSIONS
+
+
+def get_nearest_park_id(location):
+    # TODO
+    return 1
 
 
 @imagery_blueprint.route('/upload', methods=['GET', 'POST'])
@@ -61,6 +67,7 @@ def upload():
                 available_url = request.base_url.replace('upload', 'img/') + filename
                 tags = image_recog.get_tags_for_image(available_url)
             filesize = os.path.getsize(save_loc)
+            park_id = get_nearest_park_id(location)
             picture = Picture(
                 owner_id=current_user.get_id(),
                 filename=filename,
@@ -68,7 +75,8 @@ def upload():
                 original_filename=original_filename,
                 original_filesize=filesize,
                 geolocation=location,
-                tags=tags
+                tags=tags,
+                park_id=park_id
             )
             db.session.add(picture)
             db.session.commit()
