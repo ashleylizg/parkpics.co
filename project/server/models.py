@@ -58,11 +58,11 @@ class Picture(db.Model):
     original_filename = db.Column(db.String(255), nullable=True)
     original_filesize = db.Column(db.String(255), nullable=True)
     geolocation = db.Column(db.String(255), nullable=True)
-    park_name = db.Column(db.String(255), nullable=True)
+    park_id = db.Column(db.Integer, nullable=True)
     tags = db.Column(db.String(255), nullable=True)
 
     def __init__(self, filename, owner_id=None, filesize=None, original_filename=None, \
-                    original_filesize=None, geolocation=None, park_name=None, tags=None):
+                    original_filesize=None, geolocation=None, park_id=None, tags=None):
         self.upload_date = datetime.datetime.now()
         self.owner_id = owner_id
         self.filename = filename
@@ -70,7 +70,7 @@ class Picture(db.Model):
         self.original_filename = original_filename
         self.original_filesize = original_filesize
         self.geolocation = geolocation
-        self.park_name = park_name
+        self.park_id = park_id
         self.tags = tags
 
     def get_caption(self):
@@ -86,3 +86,36 @@ class Picture(db.Model):
 
     def __repr__(self):
         return '<Picture {0}>'.format(self.filename)
+
+class Park(db.Model):
+
+    __tablename__ = 'parks'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    latitude = db.Column(db.String(128), nullable=True)
+    longitude = db.Column(db.String(128), nullable=True)
+    info_string = db.Column(db.String(512), nullable=True)
+    name_abbr = db.Column(db.String(128), nullable=True)
+    name = db.Column(db.String(128), nullable=True)
+    state = db.Column(db.String(128), nullable=True)
+
+    def __init__(self, latitude=0.0, longitude=0.0, info_string=None, \
+                    name_abbr=None, name=None, state=None):
+        self.latitude = latitude
+        self.longitude = longitude
+        self.info_string = info_string
+        self.name_abbr = name_abbr
+        self.name = name
+        self.state = state
+
+    def get_id(self):
+        return self.id
+
+    def get_lat_float(self):
+        return float(self.latitude)
+
+    def get_lon_float(self):
+        return float(self.longitude)
+
+    def __repr__(self):
+        return '<Park {0}>'.format(self.id)

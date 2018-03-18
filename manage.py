@@ -1,14 +1,15 @@
 # manage.py
 
 
-import unittest
-
-import coverage
 from flask.cli import FlaskGroup
 
 from project.server import create_app, db
-from project.server.models import User
+from project.server.models import Park, User
 
+import csv
+import coverage
+import os
+import unittest
 
 app = create_app()
 cli = FlaskGroup(create_app=create_app)
@@ -47,8 +48,24 @@ def create_admin():
 
 @cli.command()
 def create_data():
-    """Creates sample data."""
-    pass
+    """Creates sample data, loads initial data."""
+    field_names = ['latitude','longitude','info_string','name_abbr','name','state']
+    csv_filenames = []
+    for file in os.listdir('data'):
+        if file.endswith('.csv'):
+            csv_filenames.append(os.path.join('data', file))
+    for csv_filename in csv_filenames:
+        with open(csv_filename, newline='') as csvfile:
+            reader = csv.DictReader(csvfile, fieldnames=field_names)
+            for row in reader:
+                p = Park(latitude=row['latitude'],
+                         longitude=row['longitude'],
+                         info_string=row['info_string'],
+                         name_abbr=row['name_abbr'],
+                         name=row['name'],
+                         state=row['state'])
+                db.session.add(p)
+    db.session.commit()
 
 
 @cli.command()
