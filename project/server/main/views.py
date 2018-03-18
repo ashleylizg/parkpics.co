@@ -16,8 +16,3 @@ def home():
 @main_blueprint.route('/about')
 def about():
     return render_template('main/about.html', is_authenticated=current_user.is_authenticated)
-
-
-@main_blueprint.route('/explore')
-def explore():
-    return render_template('main/explore.html', is_authenticated=current_user.is_authenticated)

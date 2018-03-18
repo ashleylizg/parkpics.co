@@ -122,3 +122,19 @@ def uploaded_file(filename):
 def my_pictures():
     pictures = current_user.get_my_pictures()
     return render_template('imagery/mypics.html', pictures=pictures, is_authenticated=current_user.is_authenticated)
+
+
+@imagery_blueprint.route('/explore')
+def explore():
+    return render_template('imagery/explore.html', is_authenticated=current_user.is_authenticated)
+
+
+@imagery_blueprint.route('/tag/<tag_name>')
+def tag(tag_name):
+    return render_template('imagery/tag.html', tag_name=tag_name, is_authenticated=current_user.is_authenticated)
+
+
+@imagery_blueprint.route('/image-details/<int:image_id>')
+def image_details(image_id):
+    image = None  # TODO get the Image model by database query
+    return render_template('imagery/details.html', image=image, is_authenticated=current_user.is_authenticated)
