@@ -60,6 +60,15 @@ def get_nearest_park_id(location):
     return id_of_closest
 
 
+def get_pictures_for_tag(tag_name):
+    tag_pictures = []
+    all_pictures = Picture.query.order_by(Picture.id).all()
+    for picture in all_pictures:
+        if picture.has_tag(tag_name):
+            tag_pictures.append(picture)
+    return tag_pictures
+
+
 @imagery_blueprint.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload():
@@ -132,7 +141,9 @@ def explore():
 
 @imagery_blueprint.route('/tag/<tag_name>')
 def tag(tag_name):
-    return render_template('imagery/tag.html', tag_name=tag_name, is_authenticated=current_user.is_authenticated)
+    pictures = get_pictures_for_tag(tag_name)
+    return render_template('imagery/tag.html', tag_name=tag_name, \
+                                pictures=pictures, is_authenticated=current_user.is_authenticated)
 
 
 @imagery_blueprint.route('/image-details/<int:picture_id>')

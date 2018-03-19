@@ -1,10 +1,13 @@
+{% from 'macros.html' import show_pictures %}
+
 {% extends "_base.html" %}
 
 {% block content %}
 
 <div class="body-content">
-  <div class="row">
-    <h1>Tag "{{ tag_name }}"</h1>
+  <h1>Tag "{{ tag_name }}"</h1>
+  <div class="row" id="tag-pics-area">
+      {{ show_pictures(pictures) }}
   </div>
 </div>
 

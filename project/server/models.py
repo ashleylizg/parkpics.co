@@ -1,11 +1,13 @@
 # project/server/models.py
 
 
-import datetime
-
 from flask import current_app as app
 
 from project.server import db, bcrypt
+
+import datetime
+
+import json
 
 
 class User(db.Model):
@@ -62,7 +64,7 @@ class Picture(db.Model):
     tags = db.Column(db.String(255), nullable=True)
 
     def __init__(self, filename, owner_id=None, filesize=None, original_filename=None, \
-                    original_filesize=None, geolocation=None, park_id=None, tags=None):
+                    original_filesize=None, geolocation=None, park_id=None, tags='[]'):
         self.upload_date = datetime.datetime.now()
         self.owner_id = owner_id
         self.filename = filename
@@ -73,13 +75,26 @@ class Picture(db.Model):
         self.park_id = park_id
         self.tags = tags
 
-    def get_caption(self):
-        if self.original_filename is not None:
-            return self.original_filename
-        elif self.upload_date is not None:
-            return str(self.upload_date)
-        else:
-            return 'Picture'
+    def has_tag(self, tag):
+        return tag in self.tags  # string match is enough
+
+    def get_tags_list(self):
+        return json.loads(self.tags)
+
+    def get_tags_html(self):
+        tags_list = self.get_tags_list()
+        i = 0
+        html = ''
+        for tag in tags_list:
+            if i > 0:
+                html += ', '
+            html += '<a href="'
+            html += app.config.get('BASE_URL') + '/tag/' + tag
+            html += '">'
+            html += tag
+            html += '</a>'
+            i += 1
+        return html
 
     def get_details_url(self):
         return app.config.get('BASE_URL') + '/image-details/' + str(self.id)

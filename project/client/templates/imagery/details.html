@@ -12,7 +12,7 @@
           <img class="img-fluid" src="{{ picture.get_file_url() }}">
       </a>
       <h4 style="margin-top:20px">Tags</h4>
-      <p>{{ picture.tags }}</p>
+      <p>{{ picture.get_tags_html()|safe }}</p>
     </div>
     <div class="col-md-2"></div>
   </div>
