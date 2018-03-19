@@ -135,9 +135,9 @@ def tag(tag_name):
     return render_template('imagery/tag.html', tag_name=tag_name, is_authenticated=current_user.is_authenticated)
 
 
-@imagery_blueprint.route('/image-details/<int:image_id>')
-def image_details(image_id):
-    picture = Picture.query.get(image_id)
-    if image == None:
+@imagery_blueprint.route('/image-details/<int:picture_id>')
+def image_details(picture_id):
+    picture = Picture.query.get(picture_id)
+    if picture == None:
         return render_template('errors/404.html'), 404
     return render_template('imagery/details.html', picture=picture, is_authenticated=current_user.is_authenticated)

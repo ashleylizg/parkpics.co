@@ -81,7 +81,10 @@ class Picture(db.Model):
         else:
             return 'Picture'
 
-    def get_web_url(self):
+    def get_details_url(self):
+        return app.config.get('BASE_URL') + '/image-details/' + str(self.id)
+
+    def get_file_url(self):
         return app.config.get('BASE_URL') + '/img/' + self.filename
 
     def __repr__(self):
