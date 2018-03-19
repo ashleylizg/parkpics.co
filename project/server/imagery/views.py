@@ -1,7 +1,8 @@
 from flask import current_app as app
 from flask import render_template, Blueprint, url_for, \
     redirect, flash, request, send_from_directory
-from flask_login import current_user, login_user, logout_user, login_required
+from flask_login import current_user, login_user, \
+    logout_user, login_required
 
 from math import atan2, cos, pi, sin, sqrt
 
@@ -136,5 +137,7 @@ def tag(tag_name):
 
 @imagery_blueprint.route('/image-details/<int:image_id>')
 def image_details(image_id):
-    image = None  # TODO get the Image model by database query
-    return render_template('imagery/details.html', image=image, is_authenticated=current_user.is_authenticated)
+    picture = Picture.query.get(image_id)
+    if image == None:
+        return render_template('errors/404.html'), 404
+    return render_template('imagery/details.html', picture=picture, is_authenticated=current_user.is_authenticated)
