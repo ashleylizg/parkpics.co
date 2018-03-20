@@ -2,9 +2,7 @@
 
 parkpics is a web app that curates geotagged images of North American state and national parks.
 
-A "my first web app" project meant to introduce Git-based agile and Python web development to @ashleylizg with supervision from @gingeleski
-
-[TODO .gif here]
+A "my first web app" project meant to introduce Git-based agile and Python web development to [@ashleylizg](https://github.com/ashleylizg) with supervision from [@gingeleski](https://github.com/gingeleski).
 
 ## Running locally
 
@@ -76,6 +74,6 @@ Feel free to fork the repo and add deployment scripts too.
 
 ---
 
-Made with :heart: for nature :tree:
+Made with :heart: for 🌳🌲
 
-Check out [ashleygingeleski.com](https://ashleygingeleski.com)
+Check out [ashleygingeleski.com](https://ashleygingeleski.com) :shipit:
