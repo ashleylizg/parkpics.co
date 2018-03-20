@@ -16,6 +16,7 @@ from project.server.user.forms import LoginForm, RegisterForm
 from werkzeug.utils import secure_filename
 
 import os
+import random
 import uuid
 
 ALLOWED_UPLOAD_EXTENSIONS = set(['jpg','jpeg','png','gif'])
@@ -75,8 +76,14 @@ def get_tag_cloud_html():
 
 
 def get_random_pictures(quantity):
-    # TODO
-    return []
+    random_pictures = []
+    query = db.session.query(Picture)
+    row_count = int(query.count())
+    for _ in range(quantity):
+        rand = random.randrange(0, row_count)
+        rand_picture = Picture.query.get(rand)
+        random_pictures.append(rand_picture)
+    return random_pictures
 
 
 @imagery_blueprint.route('/upload', methods=['GET', 'POST'])
