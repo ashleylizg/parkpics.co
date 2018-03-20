@@ -69,6 +69,16 @@ def get_pictures_for_tag(tag_name):
     return tag_pictures
 
 
+def get_tag_cloud_html():
+    # TODO
+    return ''
+
+
+def get_random_pictures(quantity):
+    # TODO
+    return []
+
+
 @imagery_blueprint.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload():
@@ -136,7 +146,10 @@ def my_pictures():
 
 @imagery_blueprint.route('/explore')
 def explore():
-    return render_template('imagery/explore.html', is_authenticated=current_user.is_authenticated)
+    tag_cloud_html = get_tag_cloud_html()
+    random_pictures = get_random_pictures(12)
+    return render_template('imagery/explore.html', tag_cloud=tag_cloud_html, pictures=random_pictures, \
+                                                                    is_authenticated=current_user.is_authenticated)
 
 
 @imagery_blueprint.route('/tag/<tag_name>')

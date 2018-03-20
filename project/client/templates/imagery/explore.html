@@ -5,6 +5,9 @@
 <div class="body-content">
   <div class="row">
     <h1>Explore</h1>
+    {{ tag_cloud|safe }}
+    <h4>Here are some random pictures from our users...</h4>
+    {{ show_pictures(pictures) }}
   </div>
 </div>
 
