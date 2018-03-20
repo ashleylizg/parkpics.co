@@ -73,11 +73,12 @@ def get_pictures_for_tag(tag_name):
 def get_tag_cloud_entry_html(tag_name):
     entry_html = ''
     # we'll have ~10 unique tag styles, get random number in there
-    rand = random.randrange(1, 10)
+    rand = random.randrange(1, 11)  # ceiling is not inclusive...
     entry_html += '<a class="btn btn-primary tag-'
     entry_html += str(rand)
     entry_html += '" href="'
-    entry_html += app.config.get('BASE_URL') + '/tag/' + tag
+    tag_url = app.config.get('BASE_URL') + '/tag/' + tag_name
+    entry_html += tag_url
     entry_html += '" role="button">'
     entry_html += tag_name
     entry_html += '</a>'
@@ -106,9 +107,10 @@ def get_random_pictures(quantity):
     query = db.session.query(Picture)
     row_count = int(query.count())
     for _ in range(quantity):
-        rand = random.randrange(0, row_count)
+        rand = random.randrange(1, row_count + 1)
         rand_picture = Picture.query.get(rand)
-        random_pictures.append(rand_picture)
+        if rand_picture is not None:
+            random_pictures.append(rand_picture)
     return random_pictures
 
 
