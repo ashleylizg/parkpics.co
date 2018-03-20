@@ -70,9 +70,35 @@ def get_pictures_for_tag(tag_name):
     return tag_pictures
 
 
+def get_tag_cloud_entry_html(tag_name):
+    entry_html = ''
+    # we'll have ~10 unique tag styles, get random number in there
+    rand = random.randrange(1, 10)
+    entry_html += '<a class="btn btn-primary tag-'
+    entry_html += str(rand)
+    entry_html += '" href="'
+    entry_html += app.config.get('BASE_URL') + '/tag/' + tag
+    entry_html += '" role="button">'
+    entry_html += tag_name
+    entry_html += '</a>'
+    return entry_html
+
+
+
 def get_tag_cloud_html():
-    # TODO
-    return ''
+    tag_cloud_html = ''
+    # this is horribly inefficient but we're going to aggregate unique tags!
+    all_pictures = Picture.query.order_by(Picture.id).all()
+    all_tags = []
+    for picture in all_pictures:
+        tags = picture.get_tags_list()
+        for tag in tags:
+            if tag not in all_tags:
+                all_tags.append(tag)
+    # now we have all the unique tags and just need to make a cloud
+    for tag in all_tags:
+        tag_cloud_html += get_tag_cloud_entry_html(tag)
+    return tag_cloud_html
 
 
 def get_random_pictures(quantity):
