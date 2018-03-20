@@ -3,8 +3,12 @@
 {% extends "_base.html" %}
 
 {% block content %}
-  <h1><em>{{ current_user.email }}</em>'s pics</h1>
-  <div class="row" id="my-pics-area">
+
+<div class="body-content">
+  <h1>Tag "{{ tag_name }}"</h1>
+  <div class="row" id="tag-pics-area">
       {{ show_pictures(pictures) }}
   </div>
+</div>
+
 {% endblock %}

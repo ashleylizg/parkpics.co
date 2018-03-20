@@ -1,7 +1,8 @@
 from flask import current_app as app
 from flask import render_template, Blueprint, url_for, \
     redirect, flash, request, send_from_directory
-from flask_login import current_user, login_user, logout_user, login_required
+from flask_login import current_user, login_user, \
+    logout_user, login_required
 
 from math import atan2, cos, pi, sin, sqrt
 
@@ -15,6 +16,7 @@ from project.server.user.forms import LoginForm, RegisterForm
 from werkzeug.utils import secure_filename
 
 import os
+import random
 import uuid
 
 ALLOWED_UPLOAD_EXTENSIONS = set(['jpg','jpeg','png','gif'])
@@ -57,6 +59,59 @@ def get_nearest_park_id(location):
             distance_of_closest = distance
             id_of_closest = park.get_id()
     return id_of_closest
+
+
+def get_pictures_for_tag(tag_name):
+    tag_pictures = []
+    all_pictures = Picture.query.order_by(Picture.id).all()
+    for picture in all_pictures:
+        if picture.has_tag(tag_name):
+            tag_pictures.append(picture)
+    return tag_pictures
+
+
+def get_tag_cloud_entry_html(tag_name):
+    entry_html = ''
+    # we'll have ~10 unique tag styles, get random number in there
+    rand = random.randrange(1, 11)  # ceiling is not inclusive...
+    entry_html += '<a class="btn btn-primary tag-'
+    entry_html += str(rand)
+    entry_html += '" href="'
+    tag_url = app.config.get('BASE_URL') + '/tag/' + tag_name
+    entry_html += tag_url
+    entry_html += '" role="button">'
+    entry_html += tag_name
+    entry_html += '</a>'
+    return entry_html
+
+
+
+def get_tag_cloud_html():
+    tag_cloud_html = ''
+    # this is horribly inefficient but we're going to aggregate unique tags!
+    all_pictures = Picture.query.order_by(Picture.id).all()
+    all_tags = []
+    for picture in all_pictures:
+        tags = picture.get_tags_list()
+        for tag in tags:
+            if tag not in all_tags:
+                all_tags.append(tag)
+    # now we have all the unique tags and just need to make a cloud
+    for tag in all_tags:
+        tag_cloud_html += get_tag_cloud_entry_html(tag)
+    return tag_cloud_html
+
+
+def get_random_pictures(quantity):
+    random_pictures = []
+    query = db.session.query(Picture)
+    row_count = int(query.count())
+    for _ in range(quantity):
+        rand = random.randrange(1, row_count + 1)
+        rand_picture = Picture.query.get(rand)
+        if rand_picture is not None:
+            random_pictures.append(rand_picture)
+    return random_pictures
 
 
 @imagery_blueprint.route('/upload', methods=['GET', 'POST'])
@@ -122,3 +177,26 @@ def uploaded_file(filename):
 def my_pictures():
     pictures = current_user.get_my_pictures()
     return render_template('imagery/mypics.html', pictures=pictures, is_authenticated=current_user.is_authenticated)
+
+
+@imagery_blueprint.route('/explore')
+def explore():
+    tag_cloud_html = get_tag_cloud_html()
+    random_pictures = get_random_pictures(12)
+    return render_template('imagery/explore.html', tag_cloud=tag_cloud_html, pictures=random_pictures, \
+                                                                    is_authenticated=current_user.is_authenticated)
+
+
+@imagery_blueprint.route('/tag/<tag_name>')
+def tag(tag_name):
+    pictures = get_pictures_for_tag(tag_name)
+    return render_template('imagery/tag.html', tag_name=tag_name, \
+                                pictures=pictures, is_authenticated=current_user.is_authenticated)
+
+
+@imagery_blueprint.route('/image-details/<int:picture_id>')
+def image_details(picture_id):
+    picture = Picture.query.get(picture_id)
+    if picture == None:
+        return render_template('errors/404.html'), 404
+    return render_template('imagery/details.html', picture=picture, is_authenticated=current_user.is_authenticated)

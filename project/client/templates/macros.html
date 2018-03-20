@@ -1,0 +1,11 @@
+{% macro show_pictures(pictures) %}
+    {% for picture in pictures %}
+    <div class="col-md-2">
+    <div class="thumbnail">
+        <a href="{{ picture.get_details_url() }}">
+            <img src="{{ picture.get_file_url() }}" style="width:120px;height:120px">
+        </a>
+    </div>
+    </div>
+    {% endfor %}
+{% endmacro %}
